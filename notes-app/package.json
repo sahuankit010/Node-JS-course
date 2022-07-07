@@ -9,6 +9,7 @@
   "author": "Ankit Sahu",
   "license": "ISC",
   "dependencies": {
+    "chalk": "^2.4.1",
     "validator": "^13.7.0"
   }
 }
