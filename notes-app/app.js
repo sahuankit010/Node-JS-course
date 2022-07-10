@@ -2,7 +2,7 @@
 const validator = require('validator')
 const chalk = require('chalk')
 const yargs = require('yargs')
-const print = require('./notes')
+const notes = require('./notes')
 
 yargs.command({
     command: 'add',
@@ -20,13 +20,14 @@ yargs.command({
         }
     },
     handler: function(argv){
-        console.log("Title:"+ argv.title)
-        console.log("Body:"+ argv.body)
+        notes.addNote(argv.title, argv.body)
+        // console.log("Title:"+ argv.title)
+        // console.log("Body:"+ argv.body)
     }
 })
 yargs.parse()
 // console.log(yargs.argv)
-// print('Hi I am Notes.')
+// notes('Hi I am Notes.')
 
 // console.log(validator.isEmail('abc@xyz.com'))
 // console.log(validator.isEmail('@xyz.com'))
