@@ -1,4 +1,4 @@
-const request = require('postman-request')
+const geocode = require('./utils/geocode')
 // const url = 'http://api.weatherstack.com/current?access_key=ba33bc1e49707c7a2215387137814e85&query=New%20York'
 
 // request({url: url, json: true}, (error, response) => {
@@ -16,22 +16,14 @@ const request = require('postman-request')
     
 // })
 
-const geocodeURL = 'https://api.mapbox.com/geocoding/v5/mapbox.places/Los%20Angeles.json?access_token=pk.eyJ1Ijoic2FodWFua2l0MDEwIiwiYSI6ImNsNjBpNzdhMzFvNTkzZG8xd3R6MW44ZG0ifQ.63WtWLaGQdiRUA4zugFUwg'
+geocode('Dallas', (error,data)=>{
+    console.log('Error', error)
+    console.log('Data', data)
+    console.log('Response\n', data)
+})
 
-request({url: geocodeURL, json: true}, (error, response) =>{
-
-    if(error){
-        console.log("Unable to connect!")
-    } else if(!response.body.features.length){
-        console.log('No place available!')
-    } else {
-        const data = response.body
-        data.features.forEach(element => {
-            element.center.forEach(ele =>{
-                console.log(ele)
-            })
-            console.log("Next Coordinate")
-        });
-    }
-
+geocode('Delhi', (error,data)=>{
+    console.log('Error', error)
+    console.log('Data', data)
+    console.log('Response\n', data)
 })
