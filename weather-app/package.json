@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
+  "author": "sahuankit010",
   "license": "ISC",
   "dependencies": {
     "nodemon": "^2.0.19",
