@@ -1,3 +1,8 @@
 h1{
     color: grey;
 }
+
+img{
+    max-width: 3000px;
+    max-height: 500px;
+}
