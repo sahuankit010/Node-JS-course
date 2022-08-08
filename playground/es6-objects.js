@@ -23,11 +23,11 @@ const product = {
 // console.log(stock)
 // console.log(rating)
 
-const transaction = (type, {label, stock, salePrice}) => {
+const transaction = (type, {label = 'Blue Notebook', stock = 5, salePrice = 2} = {}) => {
     console.log(type, label, stock, salePrice)
 }
 
-transaction('order', product)
+transaction('order')
 
 const greet = (name='User') => {
     console.log('Hola'+ name + '!')
