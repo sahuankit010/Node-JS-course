@@ -19,6 +19,7 @@ MongoClient.connect(connectionURL, { useNewURLParser: true }, (error, client) =>
     
     const db = client.db(databaseName)
     
+    ////////////---->  Create  <----------------
     // db.collection('users').insertMany([
     //     { name: 'Andrew', age: 26},
     //     { name: 'Jen', age: 25 },
@@ -39,23 +40,64 @@ MongoClient.connect(connectionURL, { useNewURLParser: true }, (error, client) =>
     //     console.log(task)
     // })
 
-    //Task
+    //------------> Read  <---------------------
 
-    db.collection('tasks').findOne({_id: new ObjectId('62f84a0bc6b3542d357b98d0')}, (error, task) => {
-        if(error){
-            return console.log('Error' + error)
-        }
-        console.log(task)
-    })
+    // db.collection('tasks').findOne({_id: new ObjectId('62f84a0bc6b3542d357b98d0')}, (error, task) => {
+    //     if(error){
+    //         return console.log('Error' + error)
+    //     }
+    //     console.log(task)
+    // })
 
-    
+    // db.collection('tasks').find({completed: true}).toArray((error, tasks) => {
+    //     console.log('Tasks that are completed')
+    //     if(error){
+    //         return console.log('Error'+ error)
+    //     }
 
-    db.collection('tasks').find({completed: true}).toArray((error, tasks) => {
-        console.log('Tasks that are completed')
-        if(error){
-            return console.log('Error'+ error)
-        }
+    //     console.log(tasks)
+    // })
 
-        console.log(tasks)
+    //---------> Update  <-----------------------
+    // db.collection('users').updateOne({
+    //     _id: new ObjectId('62f853bb4841d4caf44f5282')},{
+    //         $inc: {
+    //             age: -5
+    //         }
+    //     }).then((result) => {
+    //         console.log(result.matchedCount)
+    //     }).catch((error) => {
+    //         console.log(error)
+    //     })
+
+    // db.collection('tasks').updateMany(
+    //     { completed: true },
+    //     {
+    //         $set: {
+    //             completed: false
+    //         }
+    //     }
+    // ).then((res) => {
+    //     console.log(res)
+    // }).catch((error)=> {
+    //     console.log(error)
+    // })
+
+    //--------------> Delete  <------------------
+
+    // db.collection('users').deleteMany({
+    //     age: 26
+    // }).then((res) => {
+    //     console.log(res)
+    // }).catch((error) => {
+    //     console.log(error)
+    // })
+
+    db.collection('tasks').deleteOne({
+        description: 'Read'
+    }).then((res)=> {
+        console.log(res)
+    }).catch((error) => {
+        console.log(error)
     })
 })
