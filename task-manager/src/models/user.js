@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const validator = require('validator')
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -15,7 +16,8 @@ const userSchema = new mongoose.Schema({
         trim: true,
         lowercase: true,
         validate(value){
-            if(!validator.isEmail(value)) throw new Error('Invalid Email')
+            if(!validator.isEmail(value))
+                throw new Error('Invalid Email')
         }
     },
     password: {
@@ -23,18 +25,34 @@ const userSchema = new mongoose.Schema({
         required: true,
         trim: true,
         validate(value){
-            if(value.length<=6) throw new Error('Password ' + value + ' length is not more than 6.')
-            if(value.includes('password')) throw new Error('Your Password includes the word password.')
+            if(value.length<=6)
+                throw new Error('Password ' + value + ' length is not more than 6.')
+            if(value.includes('password'))
+                throw new Error('Your Password includes the word password.')
         }
     },
     age: {
         type: Number,
         default: 0,
         validate(value){
-            if(value<0) throw new Error('Age should be a positive number')
+            if(value<0) 
+                throw new Error('Age should be a positive number')
         }
-    }
+    },
+    tokens: [{
+            token : {
+                type: String,
+                required: true
+            }
+        }]
 })
+userSchema.methods.generateAuthToken = async function (){
+    const user = this
+    const token = jwt.sign({_id: user._id.toString()}, 'thisismynewcourse')
+    user.tokens = user.tokens.concat({token})
+    await user.save()
+    return token
+}
 
 userSchema.statics.findByCredentials = async (email, password) => {
     const user = await User.findOne({email})
