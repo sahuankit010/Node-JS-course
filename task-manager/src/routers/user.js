@@ -1,5 +1,6 @@
 const express = require('express')
 const Users = require('../models/user')
+const auth = require('../middleware/auth')
 const router = new express.Router()
 
 router.post('/users', async (req, res) => {
@@ -24,13 +25,31 @@ router.post('/users/login', async (req, res) => {
     // res.send({id: '23'})
 })
 
-router.get('/users', async (req, res) => {
+router.post('/users/logout', auth, async (req, res) => {
     try{
-        const users = await Users.find({})
-        res.status(200).send(users)
-    } catch(e) {
+        console.log('sfsdf')
+        req.user.tokens = req.user.tokens.filter((token) => {
+            return token.token !== req.token
+        })
+        await req.user.save()
+        res.send()
+    }catch(e) {
         res.status(500).send()
     }
+})
+
+router.post('/users/logoutAll', auth, async (req, res) => {
+    try{
+        req.user.tokens = []
+        await req.user.save()
+        res.send()
+    }catch(e){
+        res.status(500).send()
+    }
+})
+
+router.get('/users/me', auth, async (req, res) => {
+    res.send(req.user)
 })
 
 router.get('/users/:id', async (req, res) => {
