@@ -2,6 +2,8 @@ const mongoose = require('mongoose')
 const validator = require('validator')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const { MongoUnexpectedServerResponseError } = require('mongodb')
+const Tasks = require('./task')
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -46,6 +48,23 @@ const userSchema = new mongoose.Schema({
             }
         }]
 })
+
+userSchema.virtual('tasks', {
+    ref: 'Tasks',
+    localField: '_id',
+    foreignField: 'owner'
+})
+
+userSchema.methods.toJSON = function (){
+    const user = this
+    const userObject = user.toObject()
+
+    delete userObject.password
+    delete userObject.tokens
+
+    return userObject
+}
+
 userSchema.methods.generateAuthToken = async function (){
     const user = this
     const token = jwt.sign({_id: user._id.toString()}, 'thisismynewcourse')
@@ -61,7 +80,7 @@ userSchema.statics.findByCredentials = async (email, password) => {
     if(!isMatch) throw new Error('Unable to login!')   
     return user
 }
-
+// Hash the plain text password before saving
 userSchema.pre('save', async function(next) {
     const user = this
     if(user.isModified('password')) {
@@ -70,6 +89,13 @@ userSchema.pre('save', async function(next) {
 
     next()
 })
+// Delete user tasks when user is removed
+userSchema.pre('remove', async function(next) {
+    const user = this
+    await Tasks.deleteMany({owner: user._id})
+    next()
+})
+
 const User = mongoose.model('User', userSchema)
 
 module.exports = User
